@@ -14,7 +14,6 @@ public class BulletCtrl : MonoBehaviour
         rb.AddForce(transform.forward * force);  //총알의 전진 방향으로 힘을 가함
     }
 
-    // Update is called once per frame
     void Update()
     {
         

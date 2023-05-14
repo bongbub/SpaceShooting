@@ -38,24 +38,26 @@ public class FollowCam : MonoBehaviour
 
         #region 방법1
         //카메라의 위치 설정
-        /*camTr.position = targetTr.position
+        camTr.position = targetTr.position
             + (-targetTr.forward * distance)
             + (Vector3.up * height); 
         //카메라가 조금 숙이는 것 설정
         camTr.LookAt(targetTr.position);
-         */
+         
         #endregion
 
 
         #region 방법2-가장많이쓰임
         
         //카메라의 위치 pos로 잡음 slerp 함수 떄문에 윗함수와 느낌이 다르게 쫓아감
+        /*
         Vector3 pos = targetTr.position
             + (-targetTr.forward * distance)
             + (Vector3.up * height);
         camTr.position = Vector3.Slerp(camTr.position, pos, Time.deltaTime);
-        
+        */
         #endregion
+
 
            /*
         #region 방법3 damping
@@ -76,6 +78,7 @@ public class FollowCam : MonoBehaviour
 
 
         //카메라를 피벗 좌표를 향해 회전 (+Offset을 사용해 시야각을 넓힘)
+
         camTr.LookAt(targetTr.position + (targetTr.up * targetOffset));
 
 
