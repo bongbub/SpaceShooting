@@ -25,6 +25,9 @@ public class MonsterCtrl : MonoBehaviour
     //몬스터 사망 여부
     public bool isDie = false;
 
+    //GameUI에 접근하기 위한 변수
+    private GameUI gameUI;
+
 
     public GameObject bloodEffect; //프리펩 : 혈흔효과
     public GameObject bloodDecal;   //프리펩 :데칼효과
@@ -69,12 +72,16 @@ public class MonsterCtrl : MonoBehaviour
 
         anim = GetComponent<Animator>();
 
+        //GameUI 게임 오브젝트의 GameUI 스크립트 할당
+        gameUI = GameObject.Find("GameUI").GetComponent<GameUI>();
+
         //동시에 실행 (상태를 조사, 액션 처리 - 애니메이션, 따라가기)
         //코루틴 함수로 동시에 실행한다는 것이 포인트
         //몬스터의 상태를 체크하는 코루틴 함수를 구동
         StartCoroutine(CheckMonsterState());
         //상태에 따라 몬스터의 행동을 수행하는 코루틴 함수 호출
         StartCoroutine(MonsterAction());
+
     }
 
     void Update()
@@ -182,7 +189,10 @@ public class MonsterCtrl : MonoBehaviour
 
             CreateBloodEffect(pos);  //Decal효과를 주는 함수 호출
 
-            hp -= 50;
+            //GameUI의 스코어 누적과 스코어 표시 함수 호출
+            gameUI.DispScore(100);
+
+            hp -= 10;
             if (hp <= 0)
             {
                 state = State.DIE;
