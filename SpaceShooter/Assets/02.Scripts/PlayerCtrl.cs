@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerCtrl : MonoBehaviour
 {
@@ -16,29 +17,45 @@ public class PlayerCtrl : MonoBehaviour
     private Animation anim;
 
     private float turnSpeed = 80.0f;
+
+    #region 피깎는 방법1에 사용한 변수
     private readonly float initHp = 100.0f;
     public float currHp = 100.0f;
+    #endregion
 
 
-
+    #region 델리게이트 및 이벤트선언
     //델리게이트 객체 선언
     public delegate void PlayerDieHandler();
     //이벤트 객체 선언
     public static event PlayerDieHandler OnPlayerDie;
     //이벤트는 return(반환) 타입이 delegate타입 - >무조건 delegate를 선언해줘야함
+    #endregion
+
+    #region 플레이어의 생명바 이미지 변수
+    //플레이어의 생명변수
+    public int hp = 100;
+    // Player의 생명 초기값
+    private int initHpp;
+    // Player의 Health bar 이미지
+    public Image imgHpbar;
+    #endregion
 
 
+    //void Start()
+    //{
+    //    //생명 초기값 설정
+    //    initHpp = hp;
+    ////     tr = GetComponent<Transform>();  //객체 할당되어서 트랜스폼이라는 컴포넌트를 사용할 수 있음
+    ////     anim = GetComponent<Animation>();  //플레이어에 추가된 animation 컴포넌트를 가져오는 작업
+    //}
 
 
-    /*void Start()
-    {
-        tr = GetComponent<Transform>();  //객체 할당되어서 트랜스폼이라는 컴포넌트를 사용할 수 있음
-        anim = GetComponent<Animation>();  //플레이어에 추가된 animation 컴포넌트를 가져오는 작업
-    }
-    */
 
     IEnumerator Start()  //코루틴 형식의 Start() 함수 -> 게임엔진에서 호출을 자동으로 함
     {
+        initHpp = hp;
+
         tr = GetComponent<Transform>();  //객체 할당되어서 트랜스폼이라는 컴포넌트를 사용할 수 있음
         anim = GetComponent<Animation>();  //플레이어에 추가된 animation 컴포넌트를 가져오는 작업
         anim.Play("Idle");   //플레이어의 애니메이션을 아이들로 실행(0.3초)
@@ -101,12 +118,36 @@ public class PlayerCtrl : MonoBehaviour
     }
 
     //몬스터 양 팔에 istrigger세팅되어있음
+    //충돌한 collider의 IsTrigger 옵션이 체크되었을 때 발생
+    //방법1 (몬스터 춤추기 위해서 처음 구현했던 방법)
+    //void OnTriggerEnter(Collider other)
+    //{
+    //    //충돌한 collider가 몬스터의 PUNCH이면 Player의 HP차감
+    //    if (currHp >= 0.0f && other.CompareTag("PUNCH"))
+    //    {
+    //        currHp -= 10.0f;
+    //        if (currHp <= 0.0f)
+    //        {
+    //            PlayerDie();
+    //        }
+    //    }
+    //}
+
+    //방법2 (HpBar 구현하면서 나온 코드)
     void OnTriggerEnter(Collider other)
     {
-        if (currHp >= 0.0f && other.CompareTag("PUNCH"))
+        //충돌한 collider가 몬스터의 PUNCH이면 Player의 HP차감
+        if (other.gameObject.tag == "PUNCH")
         {
-            currHp -= 10.0f;
-            if (currHp <= 0.0f)
+            hp -= 10;  //10씩 피 깎기
+
+            //Image UI 항목의 fillAmount 속성을 조절해 생명 게이지 값 조절
+            imgHpbar.fillAmount = (float)hp / (float)initHpp;
+
+            Debug.Log("Player HP =" + hp.ToString());
+
+            //Player의 생명이 0 이하라면 사망 처리 
+            if (hp <= 0)
             {
                 PlayerDie();
             }
