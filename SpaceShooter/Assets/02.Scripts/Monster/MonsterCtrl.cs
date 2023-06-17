@@ -232,4 +232,5 @@ public class MonsterCtrl : MonoBehaviour
         anim.SetFloat("Speed", Random.Range(0.8f, 1.2f));
         anim.SetTrigger("IsDie");
     }
+
 }
